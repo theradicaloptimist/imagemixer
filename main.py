@@ -23,7 +23,7 @@ import shutil
 
 def afficher_image_terminal(im, max_width=None):
     """Affiche l'image en couleurs (ANSI 24-bit) dans le terminal."""
-    # Largeur du terminal
+    # Largeur du 
     try:
         cols = shutil.get_terminal_size((80, 24)).columns
     except Exception:
@@ -31,14 +31,12 @@ def afficher_image_terminal(im, max_width=None):
     if max_width is None:
         max_width = max(10, min(cols, 120))
 
-    # Conversion en RGB
     rgb = im.convert("RGB")
     w, h = rgb.size
     if w == 0 or h == 0:
         print("Image vide.")
         return
 
-    # Correction d'aspect pour les caractères (hauteur ~ 2x largeur)
     new_w = min(max_width, w)
     aspect = h / w
     new_h = max(1, int(aspect * new_w * 0.5))
@@ -51,27 +49,19 @@ def afficher_image_terminal(im, max_width=None):
         line_parts = []
         for x in range(new_w):
             r, g, b = pixels[x, y]
-            # Couleur de premier plan (38) en 24-bit + bloc plein
             line_parts.append(f"\x1b[38;2;{r};{g};{b}m█")
         line_parts.append(reset)
         print("".join(line_parts))
-    # Reset au cas où
     print(reset, end="")
 
 
 def main():
-    # Lance le flux interactif et récupère l'image résultante
     new = f.selection_images()
-    if new is not None:
+    if new != None:
         afficher_image_terminal(new)
     else:
         print("Aucune image générée.")
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nInterruption par l'utilisateur.")
-    except Exception as e:
-        print(f"Erreur: {e}")
+    main()
